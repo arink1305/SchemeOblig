@@ -63,10 +63,85 @@
   (cond ((= bit 0) (left-branch branch))
         ((= bit 1) (right-branch branch))))
  
- 
- 
+ ;; Oppgave 2b) 
 
+ ;; Resultatet er "Samurais fight ninjas by night"
 
+ ;; Oppgave 2c) 
 
+ (define (encode message tree)
+  (if (null? message)
+      '()
+      (append (encode-symbol (car message) tree)
+              (encode (cdr message) tree))))
+(define (encode-symbol symbol tree)
+  (cond ((leaf? tree) '())
+        ((memq symbol (symbols (left-branch tree)))
+         (cons 0 (encode-symbol symbol (left-branch tree))))
+        ((memq symbol (symbols (right-branch tree)))
+         (cons 1 (encode-symbol symbol (right-branch tree))))
+        (else (error "symbol not in tree - ENCODE-SYMBOL" symbol))))
 
+;; Oppgave 2d) 
 
+(define (grow-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+
+(define (successive-merge nodes)
+  (if (= (length nodes) 1)
+      (car nodes)
+      (let ((new-tree
+             (make-code-tree (car nodes)
+                             (cadr nodes))))
+        (successive-merge
+         (adjoin-set new-tree
+                     (cddr nodes))))))
+
+;; Oppgave 2e)
+
+(define codebook
+  (make-code-tree
+   (make-code-tree
+    (make-code-tree
+     (make-leaf 'by 12)
+     (make-code-tree
+      (make-code-tree
+       (make-leaf 'hide 3)
+       (make-code-tree
+        (make-leaf 'poison 1)
+        (make-leaf 'in 2)))
+      (make-code-tree
+       (make-leaf 'sword 4)
+       (make-code-tree
+        (make-leaf 'ambush 2)
+        (make-leaf 'river 2)))))
+    (make-code-tree
+     (make-leaf 'ninjas 20)
+     (make-code-tree
+      (make-code-tree
+       (make-code-tree
+        (make-code-tree
+         (make-leaf 'defeat 1)
+         (make-leaf 'assassin 1))
+        (make-code-tree
+         (make-leaf 'forest 1)
+         (make-leaf 'wait 1)))
+       (make-leaf 'the 5))
+      (make-leaf 'night 12))))
+   (make-code-tree
+    (make-leaf 'fight 45)
+    (make-leaf 'samurais 57))))
+
+;; meldingen blir totalt 5+10+6+3+4=38 bits
+;; 38 bits/17 symboler = 2.24 gjennomsnittlige bits
+;; log av 16 = 4. 17 * 4 = 68 En fast-lengde kode trenger minst 68 bits. fordi: alfabetet inneholder 16 ulike symboler, 
+;; da trenger du 4 bits for hvert symbol, meldingen inneholder 17
+
+;; Oppgave 2f) 
+
+(define (huffman-leaves tree)
+  (if (leaf? tree)
+      (list (list (symbol-leaf tree)
+                  (weight-leaf tree)))
+      (append (huffman-leaves (left-branch tree))
+              (huffman-leaves (right-branch tree)))))
