@@ -99,38 +99,26 @@
 
 ;; Oppgave 2e)
 
+(define freqs
+  '((samurais 57)
+    (ninjas 20)
+    (fight 45)
+    (night 12)
+    (hide 3)
+    (in 2)
+    (ambush 2)
+    (defeat 1)
+    (the 5)
+    (sword 4)
+    (by 12)
+    (assassin 1)
+    (river 2)
+    (forest 1)
+    (wait 1)
+    (poison 1)))
+
 (define codebook
-  (make-code-tree
-   (make-code-tree
-    (make-code-tree
-     (make-leaf 'by 12)
-     (make-code-tree
-      (make-code-tree
-       (make-leaf 'hide 3)
-       (make-code-tree
-        (make-leaf 'poison 1)
-        (make-leaf 'in 2)))
-      (make-code-tree
-       (make-leaf 'sword 4)
-       (make-code-tree
-        (make-leaf 'ambush 2)
-        (make-leaf 'river 2)))))
-    (make-code-tree
-     (make-leaf 'ninjas 20)
-     (make-code-tree
-      (make-code-tree
-       (make-code-tree
-        (make-code-tree
-         (make-leaf 'defeat 1)
-         (make-leaf 'assassin 1))
-        (make-code-tree
-         (make-leaf 'forest 1)
-         (make-leaf 'wait 1)))
-       (make-leaf 'the 5))
-      (make-leaf 'night 12))))
-   (make-code-tree
-    (make-leaf 'fight 45)
-    (make-leaf 'samurais 57))))
+  (grow-huffman-tree freqs))
 
 ;; meldingen blir totalt 5+10+6+3+4=38 bits
 ;; 38 bits/17 symboler = 2.24 gjennomsnittlige bits
